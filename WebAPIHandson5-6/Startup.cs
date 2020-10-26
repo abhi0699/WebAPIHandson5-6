@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using WebAPIHandson5_6.Models;
 
 namespace WebAPIHandson5_6
 {
@@ -28,6 +30,7 @@ namespace WebAPIHandson5_6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddControllers();
             string securityKey = "mysuperdupersecret";
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
@@ -41,7 +44,7 @@ namespace WebAPIHandson5_6
             {
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    //what to validate
+                   
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
@@ -53,6 +56,8 @@ namespace WebAPIHandson5_6
                 };
             });
 
+            string st = Configuration.GetConnectionString("constr");
+            services.AddDbContext<EmpDBContext>(options => options.UseSqlServer(st));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +71,8 @@ namespace WebAPIHandson5_6
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(setup => setup.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
 

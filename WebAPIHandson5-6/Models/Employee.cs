@@ -20,6 +20,7 @@ namespace WebAPIHandson5_6.Models
         [StringLength(30)]
         public string Email { get; set; }
 
+        [Required]
         public decimal Salary { get; set; }
 
         [Required]

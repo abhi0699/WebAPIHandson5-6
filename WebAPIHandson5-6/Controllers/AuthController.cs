@@ -38,7 +38,7 @@ namespace WebAPIHandson5_6.Controllers
                         issuer: "mySystem",
                         audience: "myUsers",
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(10),
+                        expires: DateTime.Now.AddDays(1),
                         signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
